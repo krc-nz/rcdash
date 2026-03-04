@@ -7,6 +7,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Repair Dashboard">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#104F6E">
     <link rel="apple-touch-icon" href="banner.png">
     <title>Repair Cafe Dashboard</title>
     <style>
@@ -425,6 +427,14 @@
         
         // Auto-refresh every 15 seconds
         setInterval(loadRepairs, 15000);
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            });
+        }
     </script>
 </body>
 </html>
