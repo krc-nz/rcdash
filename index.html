@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repair Cafe Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #2196F3;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .date-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        .instructions {
+            background: #E3F2FD;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .count-badge {
+            background: #FF9800;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .completed-badge {
+            background: #E8F5E9;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            border: 1px solid #4CAF50;
+            display: inline-block;
+        }
+        
+        .stats {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th {
+            background: #f5f5f5;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+        }
+        
+        tr:hover {
+            background: #f9f9f9;
+        }
+        
+        tr.completed {
+            background: #E8F5E9;
+        }
+        
+        tr.completed:hover {
+            background: #C8E6C9;
+        }
+        
+        .repair-id {
+            color: #2196F3;
+            font-weight: bold;
+            font-size: 20px;
+            white-space: nowrap;
+        }
+        
+        .status {
+            font-size: 11px;
+            color: #999;
+        }
+        
+        .status.completed {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error {
+            background: #ffebee;
+            border: 2px solid #c62828;
+            padding: 20px;
+            border-radius: 10px;
+            color: #c62828;
+            text-align: center;
+        }
+        
+        .refresh-notice {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-top: 20px;
+            font-style: italic;
+        }
+        
+        .forms-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #ddd;
+        }
+        
+        .forms-section h2 {
+            text-align: center;
+            color: #2196F3;
+            margin-bottom: 30px;
+        }
+        
+        .forms-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-card {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .form-card.customer {
+            background: #E3F2FD;
+        }
+        
+        .form-card.repairer {
+            background: #FFF3E0;
+        }
+        
+        .form-card h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        
+        .form-card.customer h3 {
+            color: #1976D2;
+        }
+        
+        .form-card.repairer h3 {
+            color: #F57C00;
+        }
+        
+        .qr-code {
+            margin: 20px 0;
+        }
+        
+        .qr-code img {
+            border: 3px solid white;
+            border-radius: 10px;
+            background: white;
+            padding: 10px;
+        }
+        
+        .form-link {
+            display: inline-block;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .form-card.customer .form-link {
+            background: #4CAF50;
+        }
+        
+        .form-card.customer .form-link:hover {
+            background: #45a049;
+        }
+        
+        .form-card.repairer .form-link {
+            background: #FF9800;
+        }
+        
+        .form-card.repairer .form-link:hover {
+            background: #F57C00;
+        }
+        
+        .form-note {
+            font-size: 12px;
+            color: #666;
+            margin-top: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .forms-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            td, th {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            .repair-id {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Repair Cafe Dashboard</h1>
+        
+        <div class="subtitle">
+            <span class="date-badge" id="dateDisplay">Loading...</span>
+        </div>
+        
+        <div class="instructions">
+            <strong>📋 For Staff:</strong> After a customer submits the form, refresh this page to see their Repair ID. Write it on a tag for their item.
+        </div>
+        
+        <div class="stats" id="stats">
+            <span class="count-badge">Today's Repairs: <span id="repairCount">0</span></span>
+            <span class="completed-badge">✓ Green = Completed</span>
+        </div>
+        
+        <div id="content">
+            <div class="loading">Loading today's repairs...</div>
+        </div>
+        
+        <div class="refresh-notice">
+            Last updated: <span id="lastUpdate">--:--</span> • <button onclick="loadRepairs()" style="background: #4CAF50; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">🔄 Refresh</button>
+        </div>
+        
+        <div class="forms-section">
+            <h2>📝 Forms</h2>
+            <div class="forms-grid">
+                <div class="form-card customer">
+                    <h3>Customer Intake Form</h3>
+                    <div class="qr-code">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Ftinyurl.com%2Fy7nvsjp3" alt="Customer Form QR">
+                    </div>
+                    <a href="https://tinyurl.com/y7nvsjp3" target="_blank" class="form-link">Open Customer Form</a>
+                    <p class="form-note">For new repairs</p>
+                </div>
+                
+                <div class="form-card repairer">
+                    <h3>Repairer Update Form</h3>
+                    <div class="qr-code">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Ftinyurl.com%2Fmt74z9mb" alt="Repairer Form QR">
+                    </div>
+                    <a href="https://tinyurl.com/mt74z9mb" target="_blank" class="form-link">Open Repairer Form</a>
+                    <p class="form-note">Update repair status</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Your Apps Script API endpoint
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyAWCMVUFMm0KrJk8Tcp64I3bk7hdpmxGgrk3bpuYCvlvxJBeBIrppA81jRegUe9ikMOQ/exec?format=json';
+        
+        // Update date display
+        function updateDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('dateDisplay').textContent = '📅 ' + now.toLocaleDateString('en-AU', options);
+        }
+        
+        // Update last update time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = now.toLocaleTimeString('en-AU');
+        }
+        
+        // Load repairs from API
+        async function loadRepairs() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayRepairs(data.repairs);
+                    document.getElementById('repairCount').textContent = data.count;
+                    updateTime();
+                } else {
+                    showError('Failed to load repairs: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                showError('Error connecting to server: ' + error.message);
+            }
+        }
+        
+        // Display repairs in table
+        function displayRepairs(repairs) {
+            const content = document.getElementById('content');
+            
+            if (repairs.length === 0) {
+                content.innerHTML = '<div class="loading">No repairs yet today. Waiting for first customer...</div>';
+                return;
+            }
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Customer</th>
+                            <th>Repair ID</th>
+                            <th>Item Type</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            repairs.forEach(repair => {
+                const completedClass = repair.isCompleted ? 'completed' : '';
+                const statusText = repair.isCompleted ? '✓ COMPLETED' : '○ Pending';
+                const statusClass = repair.isCompleted ? 'completed' : '';
+                
+                html += `
+                    <tr class="${completedClass}">
+                        <td style="white-space: nowrap;">${repair.timeSubmitted}</td>
+                        <td>${repair.firstName}</td>
+                        <td class="repair-id">${repair.repairID}</td>
+                        <td>${repair.item}</td>
+                        <td style="max-width: 200px;">${repair.description}</td>
+                        <td class="status ${statusClass}">${statusText}</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            content.innerHTML = html;
+        }
+        
+        // Show error message
+        function showError(message) {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div class="error">
+                    <h3>⚠️ Error</h3>
+                    <p>${message}</p>
+                    <button onclick="loadRepairs()" style="margin-top: 15px; padding: 10px 20px; background: #c62828; color: white; border: none; border-radius: 5px; cursor: pointer;">Try Again</button>
+                </div>
+            `;
+        }
+        
+        // Initialize
+        updateDate();
+        loadRepairs();
+        
+        // Auto-refresh every 15 seconds
+        setInterval(loadRepairs, 15000);
+    </script>
+</body>
+</html>
