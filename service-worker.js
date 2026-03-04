@@ -1,8 +1,8 @@
 const CACHE_NAME = 'repair-cafe-v1';
 const urlsToCache = [
-  '/repair-cafe-dashboard/',
-  '/repair-cafe-dashboard/index.html',
-  '/repair-cafe-dashboard/banner.png'
+  './',
+  './index.html',
+  './banner.png'
 ];
 
 // Install service worker
