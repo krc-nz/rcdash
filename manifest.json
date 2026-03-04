@@ -2,7 +2,7 @@
   "name": "Repair Cafe Dashboard",
   "short_name": "Repair Cafe",
   "description": "Live dashboard for repair cafe repairs",
-  "start_url": "/repair-cafe-dashboard/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#104F6E",
   "theme_color": "#104F6E",
