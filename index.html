@@ -541,79 +541,51 @@
         // Store repairs globally
         let allRepairs = [];
         
-       // Show repair details in modal
-        function showRepairDetails(repairID) {
-            console.log('Clicked repair:', repairID);  // Debug
-            console.log('Available repairs:', allRepairs);  // Debug
+        // Display repairs in table
+        function displayRepairs(repairs) {
+            allRepairs = repairs;  // Store globally for modal access
+            const content = document.getElementById('content');
             
-            const repair = allRepairs.find(r => r.repairID === repairID);
-            if (!repair) {
-                console.error('Repair not found:', repairID);
+            if (repairs.length === 0) {
+                content.innerHTML = '<div class="loading">No repairs yet today. Waiting for first customer...</div>';
                 return;
             }
             
-            const modal = document.getElementById('repairModal');
-            const modalBody = document.getElementById('modalBody');
-            const modalTitle = document.getElementById('modalTitle');
+            let html = '<table><thead><tr>';
+            html += '<th>Time</th>';
+            html += '<th>Customer</th>';
+            html += '<th>Repair ID</th>';
+            html += '<th>Item Type</th>';
+            html += '<th>Description</th>';
+            html += '<th>Status</th>';
+            html += '</tr></thead><tbody>';
             
-            modalTitle.textContent = repair.repairID + ' - ' + repair.firstName;
+            repairs.forEach((repair, index) => {
+                const completedClass = repair.isCompleted ? 'completed' : '';
+                const statusText = repair.isCompleted ? '✓ COMPLETED' : '○ Pending';
+                const statusClass = repair.isCompleted ? 'completed' : '';
+                
+                html += '<tr class="' + completedClass + '" data-repair-id="' + repair.repairID + '">';
+                html += '<td style="white-space: nowrap;">' + repair.timeSubmitted + '</td>';
+                html += '<td>' + repair.firstName + '</td>';
+                html += '<td class="repair-id">' + repair.repairID + '</td>';
+                html += '<td>' + repair.item + '</td>';
+                html += '<td style="max-width: 200px;">' + repair.description + '</td>';
+                html += '<td class="status ' + statusClass + '">' + statusText + '</td>';
+                html += '</tr>';
+            });
             
-            const statusBadge = repair.isCompleted 
-                ? '<span class="completed-badge-modal">✓ Completed</span>'
-                : '<span class="pending-badge-modal">○ Pending</span>';
+            html += '</tbody></table>';
+            content.innerHTML = html;
             
-            modalBody.innerHTML = `
-                <div class="detail-row">
-                    <span class="detail-label">Status</span>
-                    <div class="detail-value">${statusBadge}</div>
-                </div>
-                
-                <div class="detail-row">
-                    <span class="detail-label">Item Type</span>
-                    <div class="detail-value">${repair.item}</div>
-                </div>
-                
-                <div class="detail-row">
-                    <span class="detail-label">Item Description</span>
-                    <div class="detail-value">${repair.description}</div>
-                </div>
-                
-                <div class="detail-row">
-                    <span class="detail-label">Problem / Issue</span>
-                    <div class="detail-value">${repair.issue || 'Not specified'}</div>
-                </div>
-                
-                <div class="detail-row">
-                    <span class="detail-label">Estimated Item Value</span>
-                    <div class="detail-value">${repair.itemValue || 'Not specified'}</div>
-                </div>
-                
-                ${repair.isCompleted ? `
-                    <div class="detail-row">
-                        <span class="detail-label">Action Taken</span>
-                        <div class="detail-value">${repair.actionTaken}</div>
-                    </div>
-                    
-                    <div class="detail-row">
-                        <span class="detail-label">Repairer</span>
-                        <div class="detail-value">${repair.repairerName}</div>
-                    </div>
-                    
-                    ${repair.repairerNotes ? `
-                        <div class="detail-row">
-                            <span class="detail-label">Repairer Notes</span>
-                            <div class="detail-value">${repair.repairerNotes}</div>
-                        </div>
-                    ` : ''}
-                ` : ''}
-                
-                <div class="detail-row">
-                    <span class="detail-label">Submitted</span>
-                    <div class="detail-value">${repair.timeSubmitted}</div>
-                </div>
-            `;
-            
-            modal.style.display = 'block';
+            // Add click listeners to all rows
+            const rows = content.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                row.addEventListener('click', function() {
+                    const repairID = this.getAttribute('data-repair-id');
+                    showRepairDetails(repairID);
+                });
+            });
         }
     </script>
     </script>
