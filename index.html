@@ -7,9 +7,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Repair Dashboard">
+    <link rel="apple-touch-icon" href="banner.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#104F6E">
-    <link rel="apple-touch-icon" href="banner.png">
     <title>Repair Cafe Dashboard</title>
     <style>
         * {
@@ -20,7 +20,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background: #8BB340;
+            background: #104F6E;
             min-height: 100vh;
             padding: 20px;
         }
@@ -58,7 +58,7 @@
         
         .instructions {
             background: #E3F2FD;
-            border-left: 4px solid #2196F3;
+            border-left: 4px solid #104F6E;
             padding: 15px;
             margin-bottom: 20px;
             border-radius: 5px;
@@ -79,7 +79,7 @@
             padding: 5px 15px;
             border-radius: 15px;
             font-size: 14px;
-            border: 1px solid #4CAF50;
+            border: 1px solid #8BB340;
             display: inline-block;
         }
         
@@ -111,7 +111,12 @@
             font-size: 16px;
         }
         
-        tr:hover {
+        tbody tr {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        tbody tr:hover {
             background: #f9f9f9;
         }
         
@@ -120,7 +125,7 @@
         }
         
         tr.completed:hover {
-            background: #C8E6C9;
+            background: #d4edc4;
         }
         
         .repair-id {
@@ -136,7 +141,7 @@
         }
         
         .status.completed {
-            color: #4CAF50;
+            color: #8BB340;
             font-weight: bold;
         }
         
@@ -207,7 +212,7 @@
         }
         
         .form-card.repairer h3 {
-            color: #F57C00;
+            color: #E11E60;
         }
         
         .qr-code {
@@ -236,15 +241,15 @@
         }
         
         .form-card.customer .form-link:hover {
-            background: #45a049;
+            background: #7a9e39;
         }
         
         .form-card.repairer .form-link {
-            background: #FF9800;
+            background: #E11E60;
         }
         
         .form-card.repairer .form-link:hover {
-            background: #F57C00;
+            background: #c71a54;
         }
         
         .form-note {
@@ -253,28 +258,6 @@
             margin-top: 15px;
         }
         
-        @media (max-width: 768px) {
-            .forms-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .container {
-                padding: 15px;
-            }
-            
-            h1 {
-                font-size: 24px;
-            }
-            
-            td, th {
-                padding: 10px;
-                font-size: 14px;
-            }
-            
-            .repair-id {
-                font-size: 16px;
-            }
-        }
         /* Modal styles */
         .modal {
             display: none;
@@ -366,30 +349,43 @@
             font-size: 14px;
         }
         
-        tbody tr {
-            cursor: pointer;
-            transition: transform 0.1s;
+        @media (max-width: 768px) {
+            .forms-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            td, th {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            .repair-id {
+                font-size: 16px;
+            }
         }
-        
-        tbody tr:active {
-            transform: scale(0.98);
-        }
-        
     </style>
 </head>
 <body>
     <div class="container">
-    <div style="text-align: center; margin-bottom: 20px;">
-        <img src="banner.png" alt="Repair Cafe Banner" style="max-width: 600px; height: auto; border-radius: 10px;">
-    </div>
-    <h1>🔧 Repair Cafe Dashboard</h1>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="banner.png" alt="Repair Cafe Banner" style="max-width: 600px; height: auto; border-radius: 10px;">
+        </div>
+        <h1>🔧 Repair Cafe Dashboard</h1>
         
         <div class="subtitle">
             <span class="date-badge" id="dateDisplay">Loading...</span>
         </div>
         
         <div class="instructions">
-            <strong>📋 For Staff:</strong> After a customer submits the form, refresh this page to see their Repair ID. Write it on a tag for their item.
+            <strong>📋 For Staff:</strong> After a customer submits the form, refresh this page to see their Repair ID. Write it on a tag for their item. <strong>Click any row to see more details.</strong>
         </div>
         
         <div class="stats" id="stats">
@@ -429,9 +425,23 @@
         </div>
     </div>
     
+    <!-- Modal for repair details -->
+    <div id="repairModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <div class="modal-header">
+                <h2 id="modalTitle">Repair Details</h2>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+    
     <script>
         // Your Apps Script API endpoint
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyAWCMVUFMm0KrJk8Tcp64I3bk7hdpmxGgrk3bpuYCvlvxJBeBIrppA81jRegUe9ikMOQ/exec?format=json';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbydzDdHYRLEOZa7EsyCssm4ss2Ltr3Y4CS0TsnpBNQPZf7CB_QjjBC__Oi21BejLk133w/exec?format=json';
+        
+        // Store repairs globally
+        let allRepairs = [];
         
         // Update date display
         function updateDate() {
@@ -464,83 +474,9 @@
             }
         }
         
-        // Store repairs globally
-        let allRepairs = [];
-        
         // Display repairs in table
         function displayRepairs(repairs) {
-            allRepairs = repairs;  // Store globally for modal access
-            const content = document.getElementById('content');
-            
-            if (repairs.length === 0) {
-                content.innerHTML = '<div class="loading">No repairs yet today. Waiting for first customer...</div>';
-                return;
-            }
-            
-            let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Customer</th>
-                            <th>Repair ID</th>
-                            <th>Item Type</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            repairs.forEach((repair, index) => {
-                const completedClass = repair.isCompleted ? 'completed' : '';
-                const statusText = repair.isCompleted ? '✓ COMPLETED' : '○ Pending';
-                const statusClass = repair.isCompleted ? 'completed' : '';
-                
-                html += '<tr class="' + completedClass + '" onclick="showRepairDetails(\'' + repair.repairID + '\')">';
-                html += '<td style="white-space: nowrap;">' + repair.timeSubmitted + '</td>';
-                html += '<td>' + repair.firstName + '</td>';
-                html += '<td class="repair-id">' + repair.repairID + '</td>';
-                html += '<td>' + repair.item + '</td>';
-                html += '<td style="max-width: 200px;">' + repair.description + '</td>';
-                html += '<td class="status ' + statusClass + '">' + statusText + '</td>';
-                html += '</tr>';
-            });
-            
-            html += '</tbody></table>';
-            content.innerHTML = html;
-        }
-        
-        // Show error message
-        function showError(message) {
-            const content = document.getElementById('content');
-            content.innerHTML = `
-                <div class="error">
-                    <h3>⚠️ Error</h3>
-                    <p>${message}</p>
-                    <button onclick="loadRepairs()" style="margin-top: 15px; padding: 10px 20px; background: #8BB340; color: white; border: none; border-radius: 5px; cursor: pointer;">Try Again</button>
-                </div>
-            `;
-        }
-        
-        // Initialize
-        updateDate();
-        loadRepairs();
-        
-        // Auto-refresh every 15 seconds
-        setInterval(loadRepairs, 15000);
-        // Register service worker for PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(reg => console.log('Service Worker registered'))
-                    .catch(err => console.log('Service Worker registration failed'));
-            });
-        }
-        
-        // Display repairs in table
-        function displayRepairs(repairs) {
-            allRepairs = repairs;  // Store globally for modal access
+            allRepairs = repairs;
             const content = document.getElementById('content');
             
             if (repairs.length === 0) {
@@ -557,7 +493,7 @@
             html += '<th>Status</th>';
             html += '</tr></thead><tbody>';
             
-            repairs.forEach((repair, index) => {
+            repairs.forEach(function(repair) {
                 const completedClass = repair.isCompleted ? 'completed' : '';
                 const statusText = repair.isCompleted ? '✓ COMPLETED' : '○ Pending';
                 const statusClass = repair.isCompleted ? 'completed' : '';
@@ -575,29 +511,122 @@
             html += '</tbody></table>';
             content.innerHTML = html;
             
-            // Add click listeners to all rows
-            const rows = content.querySelectorAll('tbody tr');
-            rows.forEach(row => {
+            // Add click listeners to all tbody rows
+            const rows = document.querySelectorAll('#content tbody tr');
+            rows.forEach(function(row) {
                 row.addEventListener('click', function() {
                     const repairID = this.getAttribute('data-repair-id');
                     showRepairDetails(repairID);
                 });
             });
         }
+        
+        // Show repair details in modal
+        function showRepairDetails(repairID) {
+            const repair = allRepairs.find(function(r) { return r.repairID === repairID; });
+            if (!repair) {
+                console.error('Repair not found:', repairID);
+                return;
+            }
+            
+            const modal = document.getElementById('repairModal');
+            const modalBody = document.getElementById('modalBody');
+            const modalTitle = document.getElementById('modalTitle');
+            
+            modalTitle.textContent = repair.repairID + ' - ' + repair.firstName;
+            
+            const statusBadge = repair.isCompleted 
+                ? '<span class="completed-badge-modal">✓ Completed</span>'
+                : '<span class="pending-badge-modal">○ Pending</span>';
+            
+            let bodyHTML = '';
+            bodyHTML += '<div class="detail-row">';
+            bodyHTML += '<span class="detail-label">Status</span>';
+            bodyHTML += '<div class="detail-value">' + statusBadge + '</div>';
+            bodyHTML += '</div>';
+            
+            bodyHTML += '<div class="detail-row">';
+            bodyHTML += '<span class="detail-label">Item Type</span>';
+            bodyHTML += '<div class="detail-value">' + repair.item + '</div>';
+            bodyHTML += '</div>';
+            
+            bodyHTML += '<div class="detail-row">';
+            bodyHTML += '<span class="detail-label">Item Description</span>';
+            bodyHTML += '<div class="detail-value">' + repair.description + '</div>';
+            bodyHTML += '</div>';
+            
+            bodyHTML += '<div class="detail-row">';
+            bodyHTML += '<span class="detail-label">Problem / Issue</span>';
+            bodyHTML += '<div class="detail-value">' + (repair.issue || 'Not specified') + '</div>';
+            bodyHTML += '</div>';
+            
+            bodyHTML += '<div class="detail-row">';
+            bodyHTML += '<span class="detail-label">Estimated Item Value</span>';
+            bodyHTML += '<div class="detail-value">' + (repair.itemValue || 'Not specified') + '</div>';
+            bodyHTML += '</div>';
+            
+            if (repair.isCompleted) {
+                bodyHTML += '<div class="detail-row">';
+                bodyHTML += '<span class="detail-label">Action Taken</span>';
+                bodyHTML += '<div class="detail-value">' + repair.actionTaken + '</div>';
+                bodyHTML += '</div>';
+                
+                bodyHTML += '<div class="detail-row">';
+                bodyHTML += '<span class="detail-label">Repairer</span>';
+                bodyHTML += '<div class="detail-value">' + repair.repairerName + '</div>';
+                bodyHTML += '</div>';
+                
+                if (repair.repairerNotes) {
+                    bodyHTML += '<div class="detail-row">';
+                    bodyHTML += '<span class="detail-label">Repairer Notes</span>';
+                    bodyHTML += '<div class="detail-value">' + repair.repairerNotes + '</div>';
+                    bodyHTML += '</div>';
+                }
+            }
+            
+            bodyHTML += '<div class="detail-row">';
+            bodyHTML += '<span class="detail-label">Submitted</span>';
+            bodyHTML += '<div class="detail-value">' + repair.timeSubmitted + '</div>';
+            bodyHTML += '</div>';
+            
+            modalBody.innerHTML = bodyHTML;
+            modal.style.display = 'block';
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('repairModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('repairModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Show error message
+        function showError(message) {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="error"><h3>⚠️ Error</h3><p>' + message + '</p><button onclick="loadRepairs()" style="margin-top: 15px; padding: 10px 20px; background: #8BB340; color: white; border: none; border-radius: 5px; cursor: pointer;">Try Again</button></div>';
+        }
+        
+        // Initialize
+        updateDate();
+        loadRepairs();
+        
+        // Auto-refresh every 15 seconds
+        setInterval(loadRepairs, 15000);
+        
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(function(reg) { console.log('Service Worker registered'); })
+                    .catch(function(err) { console.log('Service Worker registration failed'); });
+            });
+        }
     </script>
-    </script>
-    
-    <!-- Modal for repair details -->
-    <div id="repairModal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal()">&times;</button>
-            <div class="modal-header">
-                <h2 id="modalTitle">Repair Details</h2>
-            </div>
-            <div id="modalBody"></div>
-        </div>
-    </div>
-</body>
-</html>
 </body>
 </html>
