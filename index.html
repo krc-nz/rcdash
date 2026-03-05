@@ -464,9 +464,12 @@
             }
         }
         
+        // Store repairs globally
+        let allRepairs = [];
+        
         // Display repairs in table
         function displayRepairs(repairs) {
-            allRepairs = repairs;  // Store globally
+            allRepairs = repairs;  // Store globally for modal access
             const content = document.getElementById('content');
             
             if (repairs.length === 0) {
@@ -495,7 +498,7 @@
                 const statusClass = repair.isCompleted ? 'completed' : '';
                 
                 html += `
-                    <tr class="${completedClass}" onclick="showRepairDetails(${repair.repairID.replace(/'/g, "\\'")})" data-repair='${JSON.stringify(repair).replace(/'/g, "&#39;")}'>
+                    <tr class="${completedClass}" onclick="showRepairDetails('${repair.repairID}')">
                         <td style="white-space: nowrap;">${repair.timeSubmitted}</td>
                         <td>${repair.firstName}</td>
                         <td class="repair-id">${repair.repairID}</td>
@@ -540,10 +543,16 @@
         // Store repairs globally
         let allRepairs = [];
         
-        // Show repair details in modal
+       // Show repair details in modal
         function showRepairDetails(repairID) {
+            console.log('Clicked repair:', repairID);  // Debug
+            console.log('Available repairs:', allRepairs);  // Debug
+            
             const repair = allRepairs.find(r => r.repairID === repairID);
-            if (!repair) return;
+            if (!repair) {
+                console.error('Repair not found:', repairID);
+                return;
+            }
             
             const modal = document.getElementById('repairModal');
             const modalBody = document.getElementById('modalBody');
