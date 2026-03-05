@@ -492,22 +492,19 @@
                     <tbody>
             `;
             
-            repairs.forEach(repair => {
+            repairs.forEach((repair, index) => {
                 const completedClass = repair.isCompleted ? 'completed' : '';
                 const statusText = repair.isCompleted ? '✓ COMPLETED' : '○ Pending';
                 const statusClass = repair.isCompleted ? 'completed' : '';
                 
-                html += `
-                    html += `
-                        <tr class="${completedClass}" onclick="alert('Clicked ${repair.repairID}'); showRepairDetails('${repair.repairID}');">
-                        <td style="white-space: nowrap;">${repair.timeSubmitted}</td>
-                        <td>${repair.firstName}</td>
-                        <td class="repair-id">${repair.repairID}</td>
-                        <td>${repair.item}</td>
-                        <td style="max-width: 200px;">${repair.description}</td>
-                        <td class="status ${statusClass}">${statusText}</td>
-                    </tr>
-                `;
+                html += '<tr class="' + completedClass + '" onclick="showRepairDetails(\'' + repair.repairID + '\')">';
+                html += '<td style="white-space: nowrap;">' + repair.timeSubmitted + '</td>';
+                html += '<td>' + repair.firstName + '</td>';
+                html += '<td class="repair-id">' + repair.repairID + '</td>';
+                html += '<td>' + repair.item + '</td>';
+                html += '<td style="max-width: 200px;">' + repair.description + '</td>';
+                html += '<td class="status ' + statusClass + '">' + statusText + '</td>';
+                html += '</tr>';
             });
             
             html += '</tbody></table>';
