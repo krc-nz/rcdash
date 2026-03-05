@@ -466,6 +466,7 @@
         
         // Display repairs in table
         function displayRepairs(repairs) {
+            allRepairs = repairs;  // Store globally
             const content = document.getElementById('content');
             
             if (repairs.length === 0) {
@@ -494,7 +495,7 @@
                 const statusClass = repair.isCompleted ? 'completed' : '';
                 
                 html += `
-                    <tr class="${completedClass}" onclick='showRepairDetails(${JSON.stringify(repair)})'>
+                    <tr class="${completedClass}" onclick="showRepairDetails(${repair.repairID.replace(/'/g, "\\'")})" data-repair='${JSON.stringify(repair).replace(/'/g, "&#39;")}'>
                         <td style="white-space: nowrap;">${repair.timeSubmitted}</td>
                         <td>${repair.firstName}</td>
                         <td class="repair-id">${repair.repairID}</td>
@@ -536,8 +537,14 @@
             });
         }
         
+        // Store repairs globally
+        let allRepairs = [];
+        
         // Show repair details in modal
-        function showRepairDetails(repair) {
+        function showRepairDetails(repairID) {
+            const repair = allRepairs.find(r => r.repairID === repairID);
+            if (!repair) return;
+            
             const modal = document.getElementById('repairModal');
             const modalBody = document.getElementById('modalBody');
             const modalTitle = document.getElementById('modalTitle');
@@ -600,19 +607,6 @@
             `;
             
             modal.style.display = 'block';
-        }
-        
-        // Close modal
-        function closeModal() {
-            document.getElementById('repairModal').style.display = 'none';
-        }
-        
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('repairModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
         }
     </script>
     </script>
