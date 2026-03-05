@@ -498,7 +498,8 @@
                 const statusClass = repair.isCompleted ? 'completed' : '';
                 
                 html += `
-                    <tr class="${completedClass}" onclick="showRepairDetails('${repair.repairID}')">
+                    html += `
+                        <tr class="${completedClass}" onclick="alert('Clicked ${repair.repairID}'); showRepairDetails('${repair.repairID}');">
                         <td style="white-space: nowrap;">${repair.timeSubmitted}</td>
                         <td>${repair.firstName}</td>
                         <td class="repair-id">${repair.repairID}</td>
