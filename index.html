@@ -34,6 +34,16 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
+        /* HEADER IMAGE - RESPONSIVE */
+        .header-image {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        
         h1 {
             color: #104F6E;
             text-align: center;
@@ -88,10 +98,17 @@
             margin-bottom: 20px;
         }
         
+        /* TABLE WRAPPER FOR HORIZONTAL SCROLLING */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 20px;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            min-width: 800px; /* Ensures table doesn't get too cramped */
         }
         
         th {
@@ -229,36 +246,41 @@
         .form-link {
             display: inline-block;
             color: white;
-            padding: 12px 24px;
+            background: #104F6E;
+            padding: 12px 25px;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-weight: bold;
-            margin-top: 10px;
+            transition: background 0.3s;
         }
         
-        .form-card.customer .form-link {
-            background: #8BB340;
-        }
-        
-        .form-card.customer .form-link:hover {
-            background: #7a9e39;
-        }
-        
-        .form-card.repairer .form-link {
-            background: #E11E60;
-        }
-        
-        .form-card.repairer .form-link:hover {
-            background: #c71a54;
+        .form-link:hover {
+            background: #0d3f57;
         }
         
         .form-note {
-            font-size: 12px;
+            margin-top: 10px;
             color: #666;
-            margin-top: 15px;
+            font-size: 14px;
         }
         
-        /* Modal styles */
+        .refresh-button {
+            background: #8BB340;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background 0.3s;
+        }
+        
+        .refresh-button:hover {
+            background: #78a033;
+        }
+        
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -267,8 +289,8 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
             overflow: auto;
+            background-color: rgba(0,0,0,0.6);
         }
         
         .modal-content {
@@ -281,17 +303,6 @@
             position: relative;
         }
         
-        .modal-header {
-            border-bottom: 2px solid #104F6E;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .modal-header h2 {
-            color: #104F6E;
-            margin: 0;
-        }
-        
         .close-modal {
             position: absolute;
             right: 20px;
@@ -299,39 +310,49 @@
             font-size: 32px;
             font-weight: bold;
             color: #999;
-            cursor: pointer;
             background: none;
             border: none;
-            padding: 0;
+            cursor: pointer;
             line-height: 1;
+            transition: color 0.3s;
         }
         
         .close-modal:hover {
             color: #333;
         }
         
+        .modal-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .modal-header h2 {
+            color: #104F6E;
+            margin: 0;
+        }
+        
         .detail-row {
-            margin: 15px 0;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 5px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
         }
         
         .detail-label {
-            font-weight: bold;
-            color: #104F6E;
             display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 12px;
+            text-transform: uppercase;
         }
         
         .detail-value {
-            color: #333;
             font-size: 16px;
+            color: #333;
         }
         
         .completed-badge-modal {
-            display: inline-block;
             background: #8BB340;
             color: white;
             padding: 5px 15px;
@@ -341,28 +362,51 @@
         }
         
         .pending-badge-modal {
-            display: inline-block;
-            background: #999;
-            color: white;
+            background: #f5f5f5;
+            color: #999;
             padding: 5px 15px;
             border-radius: 15px;
             font-size: 14px;
+            font-weight: bold;
+            border: 1px solid #ddd;
         }
         
+        /* MOBILE RESPONSIVE STYLES */
         @media (max-width: 768px) {
-            .forms-grid {
-                grid-template-columns: 1fr;
+            body {
+                padding: 10px;
             }
             
             .container {
-                padding: 15px;
+                padding: 20px;
+                border-radius: 10px;
             }
             
             h1 {
                 font-size: 24px;
             }
             
-            td, th {
+            .forms-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .qr-code img {
+                max-width: 180px;
+            }
+            
+            .modal-content {
+                margin: 10% 15px;
+                padding: 20px;
+            }
+            
+            /* Ensure table scrolls smoothly on mobile */
+            .table-wrapper {
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            
+            th, td {
                 padding: 10px;
                 font-size: 14px;
             }
@@ -371,34 +415,55 @@
                 font-size: 16px;
             }
         }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+            }
+            
+            .date-badge {
+                font-size: 13px;
+                padding: 6px 15px;
+            }
+            
+            .form-card h3 {
+                font-size: 18px;
+            }
+            
+            th, td {
+                padding: 8px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div style="text-align: center; margin-bottom: 20px;">
-            <img src="banner.png" alt="Repair Cafe Banner" style="max-width: 600px; height: auto; border-radius: 10px;">
-        </div>
-        <h1>🔧 Repair Cafe Dashboard</h1>
+        <!-- HEADER IMAGE - Now responsive -->
+        <img src="banner.png" alt="Repair Cafe Banner" class="header-image">
         
-        <div class="subtitle">
-            <span class="date-badge" id="dateDisplay">Loading...</span>
+        <h1>🛠️ Today's Repairs</h1>
+        <div class="subtitle">Live Dashboard</div>
+        
+        <div class="stats">
+            <span id="dateDisplay" class="date-badge"></span>
+            <div style="margin-top: 10px;">
+                <span class="count-badge"><span id="repairCount">0</span> repairs today</span>
+                <button class="refresh-button" onclick="loadRepairs()">🔄 Refresh</button>
+            </div>
         </div>
         
         <div class="instructions">
-            <strong>📋 For Staff:</strong> After a customer submits the form, refresh this page to see their Repair ID. Write it on a tag for their item. <strong>Click any row to see more details.</strong>
+            <strong>📋 Instructions:</strong> Click any row to see full repair details. Green rows = completed repairs. Auto-refreshes every 15 seconds.
         </div>
         
-        <div class="stats" id="stats">
-            <span class="count-badge">Today's Repairs: <span id="repairCount">0</span></span>
-            <span class="completed-badge">✓ Green = Completed</span>
-        </div>
-        
-        <div id="content">
-            <div class="loading">Loading today's repairs...</div>
+        <!-- TABLE WRAPPER for horizontal scrolling -->
+        <div class="table-wrapper">
+            <div id="content" class="loading">Loading repairs...</div>
         </div>
         
         <div class="refresh-notice">
-            Last updated: <span id="lastUpdate">--:--</span> • <button onclick="loadRepairs()" style="background: #8BB340; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">🔄 Refresh</button>
+            Last updated: <span id="lastUpdate">--:--</span>
         </div>
         
         <div class="forms-section">
@@ -438,8 +503,8 @@
     
     <script>
         // Your Apps Script API endpoint
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyAWCMVUFMm0KrJk8Tcp64I3bk7hdpmxGgrk3bpuYCvlvxJBeBIrppA81jRegUe9ikMOQ/exec?format=json';
-       
+        const API_URL = 'https://script.google.com/macros/s/AKfycbydzDdHYRLEOZa7EsyCssm4ss2Ltr3Y4CS0TsnpBNQPZf7CB_QjjBC__Oi21BejLk133w/exec?format=json';
+        
         // Store repairs globally
         let allRepairs = [];
         
